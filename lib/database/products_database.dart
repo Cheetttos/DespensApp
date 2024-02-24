@@ -23,11 +23,11 @@ class ProductsDatabase {
       pathDb,
       version: VERSIONDB,
       onCreate: (db, version) {
-        String query = '''CREATE DATABASE tblProductos(
+        String query = '''CREATE TABLE tblProductos(
           idProducto INTEGER PRIMARY KEY,
           nomProducto VARCHAR(30),
           canProducto INTEGER, 
-          fechaCaducidad DATE
+          fechaCaducidad VARCHAR(10)
         )''';
         db.execute(query);
       },

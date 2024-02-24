@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/screens/register_screen.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
 
@@ -95,7 +96,19 @@ class _LoginScreenState extends State<LoginScreen> {
                       }),
                       SignInButton(Buttons.Facebook, onPressed: () {}),
                       SignInButton(Buttons.Google, onPressed: () {}),
-                      SignInButton(Buttons.GitHub, onPressed: () {})
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/registro');
+                        },
+                        style: TextButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          textStyle: const TextStyle(fontSize: 16),
+                          foregroundColor: Colors.black,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(1)),
+                        ),
+                        child: const Text('Registrate aquí'),
+                      )
                     ],
                   ),
                 )),
