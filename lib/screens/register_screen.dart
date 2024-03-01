@@ -120,7 +120,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         builder: (context) {
                           return ListView(
                               padding: const EdgeInsets.all(10),
-                              children: const []);
+                              children: [
+                                TextButton(
+                                    style: TextButton.styleFrom(
+                                        textStyle:
+                                            const TextStyle(fontSize: 18),
+                                        backgroundColor: Colors.blueGrey[200],
+                                        foregroundColor: Colors.black),
+                                    onPressed: () async {
+                                      await _pickImageFromGallery();
+                                      Navigator.pop(context);
+                                    },
+                                    child:
+                                        const Text('Elegir desde la galeria')),
+                                TextButton(
+                                    style: TextButton.styleFrom(
+                                        textStyle:
+                                            const TextStyle(fontSize: 18),
+                                        backgroundColor: Colors.blueGrey[200],
+                                        foregroundColor: Colors.black),
+                                    onPressed: () async {
+                                      await _pickImageFromCamera();
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('Tomar foto')),
+                              ]);
                         },
                       );
                     },
