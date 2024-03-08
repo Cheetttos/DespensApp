@@ -26,6 +26,13 @@ class DashboardScreen extends StatelessWidget {
               trailing: Icon(Icons.chevron_right),
             ),
             ListTile(
+              leading: const Icon(Icons.movie),
+              title: const Text('Movies app'),
+              subtitle: const Text('Peliculas populares'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.pushNamed(context, '/movies'),
+            ),
+            ListTile(
               leading: const Icon(Icons.shopping_bag),
               title: const Text("Mi despensa"),
               subtitle: const Text("Relación de productos que no voy a usar"),

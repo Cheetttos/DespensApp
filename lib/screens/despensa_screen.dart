@@ -1,3 +1,4 @@
+import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/database/products_database.dart';
 import 'package:flutter_application_1/model/products_model.dart';
@@ -17,7 +18,7 @@ class _DespensaScreenState extends State<DespensaScreen> {
   @override
   void initState() {
     super.initState();
-    productsDB = new ProductsDatabase();
+    productsDB = ProductsDatabase();
   }
 
   @override
@@ -86,7 +87,37 @@ class _DespensaScreenState extends State<DespensaScreen> {
                     showModal(context, producto);
                   },
                   icon: const Icon(Icons.edit)),
-              IconButton(onPressed: () {}, icon: const Icon(Icons.delete))
+              IconButton(
+                  onPressed: () async {
+                    ArtDialogResponse response = await ArtSweetAlert.show(
+                        barrierDismissible: false,
+                        context: context,
+                        artDialogArgs: ArtDialogArgs(
+                            denyButtonText: "Cancel",
+                            title: "Are you sure?",
+                            text: "You won't be able to revert this!",
+                            confirmButtonText: "Yes, delete it",
+                            type: ArtSweetAlertType.warning));
+                    if (response == null) {
+                      return;
+                    }
+
+                    if (response.isTapConfirmButton) {
+                      productsDB!.ELIMINAR(producto.idProducto!).then((value) {
+                        if (value > 0) {
+                          ArtSweetAlert.show(
+                              context: context,
+                              artDialogArgs: ArtDialogArgs(
+                                  type: ArtSweetAlertType.success,
+                                  title: "Deleted!"));
+                          AppValueNotifier.banProducts.value =
+                              !AppValueNotifier.banProducts.value;
+                        }
+                      });
+                      return;
+                    }
+                  },
+                  icon: const Icon(Icons.delete))
             ],
           )
         ],
