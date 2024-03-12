@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/services/email_auth_firebase.dart';
 import 'package:image_picker/image_picker.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -13,64 +14,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   File? _selectedImage;
 
   final _keyForm = GlobalKey<FormState>();
-
-  final conNameUser = TextEditingController();
-  final conEmailUser = TextEditingController();
-  final conPwdUser = TextEditingController();
-
-  final txtUser = TextFormField(
-    keyboardType: TextInputType.emailAddress,
-    validator: (value) {
-      if (value!.isEmpty) {
-        return 'Ingresa un usuario';
-      }
-      RegExp emailRegExp =
-          RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]{2,}$");
-      if (!emailRegExp.hasMatch(value)) {
-        return 'Tu usuario no cumple con los parametros necesarios';
-      }
-      return null;
-    },
-    decoration: const InputDecoration(
-      border: OutlineInputBorder(),
-      labelText: 'Usuario (correo)',
-    ),
-  );
-
-  final txtPass = TextFormField(
-    keyboardType: TextInputType.emailAddress,
-    validator: (value) {
-      final passRegExp =
-          RegExp(r"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$");
-      if (value!.isEmpty) {
-        return 'Ingresa una contraseña';
-      }
-      if (value.length < 8) {
-        return 'El minimo de caracteres son 8';
-      }
-      if (!passRegExp.hasMatch(value)) {
-        return 'la contraseña no cumple con los parametros necesarios, min. 8 caracteres, inicial mayus, al menos un numero y caracter especial';
-      }
-      return null;
-    },
-    decoration: const InputDecoration(
-      border: OutlineInputBorder(),
-      labelText:
-          'Contraseña (min. 8 caracteres, inicial mayus, al menos un numero y caracter especial)',
-    ),
-  );
-
-  final txtNombreCompleto = TextFormField(
-    keyboardType: TextInputType.emailAddress,
-    decoration: const InputDecoration(
-        border: OutlineInputBorder(), labelText: 'Nombre completo'),
-    validator: (value) {
-      if (value!.isEmpty) {
-        return 'Ingresa tu nombre completamente';
-      }
-      return null;
-    },
-  );
+  final authFirebase = EmailAuthFirebase();
 
   final txtEspacio = const SizedBox(
     height: 12,
@@ -92,12 +36,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     if (returnImage == null) return;
     setState(() {
-      _selectedImage = File(returnImage!.path);
+      _selectedImage = File(returnImage.path);
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final conUser = TextEditingController();
+    final conEmailUser = TextEditingController();
+    final conPwdUser = TextEditingController();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Registro de usuario'),
@@ -200,19 +147,81 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: Column(
               children: [
                 txtEspacio,
-                txtNombreCompleto,
+                TextFormField(
+                  controller: conUser,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Nombre completo'),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Ingresa tu nombre completamente';
+                    }
+                    return null;
+                  },
+                ),
                 txtEspacio,
-                txtUser,
+                TextFormField(
+                  keyboardType: TextInputType.emailAddress,
+                  controller: conEmailUser,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Ingresa tu correo';
+                    }
+                    RegExp emailRegExp = RegExp(
+                        r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]{2,}$");
+                    if (!emailRegExp.hasMatch(value)) {
+                      return 'Tu usuario no cumple con los parametros necesarios';
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Usuario (correo)',
+                  ),
+                ),
                 txtEspacio,
-                txtPass,
+                TextFormField(
+                  controller: conPwdUser,
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (value) {
+                    final passRegExp = RegExp(
+                        r"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$");
+                    if (value!.isEmpty) {
+                      return 'Ingresa una contraseña';
+                    }
+                    if (value.length < 8) {
+                      return 'El minimo de caracteres son 8';
+                    }
+                    if (!passRegExp.hasMatch(value)) {
+                      return 'la contraseña no cumple con los parametros necesarios, min. 8 caracteres, inicial mayus, al menos un numero y caracter especial';
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText:
+                        'Contraseña (min. 8 caracteres, inicial mayus, al menos un numero y caracter especial)',
+                  ),
+                ),
                 txtEspacio,
                 ElevatedButton(
                   onPressed: () {
                     if (_keyForm.currentState!.validate()) {
-                      // Aquí puedes manejar el registro exitoso
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Se registro el usuario')),
-                      );
+                      authFirebase
+                          .signUpUser(
+                              name: conUser.text,
+                              password: conPwdUser.text,
+                              email: conEmailUser.text)
+                          .then((value) {
+                        if (value) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Se registro el usuario')),
+                          );
+                          //tecnicamente registrado
+                        }
+                      });
                     } else {
                       // Si el formulario no es válido, muestra un mensaje
                       ScaffoldMessenger.of(context).showSnackBar(
