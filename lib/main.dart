@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/firebase_options.dart';
 import 'package:flutter_application_1/screens/dashboard_screen.dart';
 import 'package:flutter_application_1/screens/detail_movie_screen.dart';
+import 'package:flutter_application_1/screens/products_firebase_screen.dart';
 import 'package:flutter_application_1/screens/register_screen.dart';
 import 'package:flutter_application_1/screens/splash_screen.dart';
 import 'package:flutter_application_1/screens/despensa_screen.dart';
@@ -38,6 +39,8 @@ class MyApp extends StatelessWidget {
               "/registro": (BuildContext context) => const RegisterScreen(),
               "/movies": (BuildContext context) => const PopularMoviesScreen(),
               "/detail": (BuildContext context) => const DetailMovieScreen(),
+              "/producto": (BuildContext context) =>
+                  const ProductsFirebaseScreen(),
             },
           );
         });
