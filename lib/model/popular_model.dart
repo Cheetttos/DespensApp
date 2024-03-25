@@ -42,7 +42,7 @@ class PopularModel {
       originalTitle: movie['original_title'],
       overview: movie['overview'],
       popularity: movie['popularity'],
-      releaseDate: movie['release_date'], // Corrected field name
+      releaseDate: movie['release_date'],
       title: movie['title'],
       voteAverage: movie['vote_average'],
       voteCount: movie['vote_count'],
